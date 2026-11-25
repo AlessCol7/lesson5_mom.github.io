@@ -1,0 +1,803 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Long Weekend</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500;1,6..96,700&display=swap">
+<style>
+/* Layout: a film strip of chapters pinned on top; one chapter at a time.
+   Each chapter opens on a poster-style title card (a sky that moves from dawn to night across the book),
+   then a single reading column: scene, how it works, practice, cheat sheet, talk. */
+:root{
+  --paper:#F2F3EF; --card:#FFFFFF; --ink:#17202A; --muted:#566370; --line:#D3D8D4;
+  --accent:#1B6B75; --accent-ink:#FFFFFF; --accent-soft:#DCEBEC;
+  --irr:#7A3E7E; --irr-soft:#EFE1F1;
+  --ex:#7A5A10; --ex-soft:#F3E8C8;
+  --good:#2B7A4B; --good-soft:#DDEFE3; --bad:#B0372E; --bad-soft:#F7E0DD;
+  --screen:#0B1217; --screen-fg:#F2F3EF; --frame:#141D24; --frame-line:#2D3A44; --perf:#2D3A44;
+  --display:'Bodoni Moda','Didot','Bodoni 72','Times New Roman',serif;
+  --body:'Atkinson Hyperlegible','Segoe UI',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1418; --card:#161E25; --ink:#E8EAE6; --muted:#98A3AD; --line:#2A343C;
+    --accent:#5CC2CC; --accent-ink:#06191C; --accent-soft:#17333A;
+    --irr:#DDA6E0; --irr-soft:#36213A;
+    --ex:#E4C46E; --ex-soft:#3A2F14;
+    --good:#6CCB92; --good-soft:#163A26; --bad:#F29088; --bad-soft:#42201D;
+    --frame:#141D24; --frame-line:#33414B; --perf:#33414B;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1418; --card:#161E25; --ink:#E8EAE6; --muted:#98A3AD; --line:#2A343C;
+  --accent:#5CC2CC; --accent-ink:#06191C; --accent-soft:#17333A;
+  --irr:#DDA6E0; --irr-soft:#36213A;
+  --ex:#E4C46E; --ex-soft:#3A2F14;
+  --good:#6CCB92; --good-soft:#163A26; --bad:#F29088; --bad-soft:#42201D;
+  --frame:#141D24; --frame-line:#33414B; --perf:#33414B;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--screen);z-index:30}
+h1,h2,h3,h4{font-family:var(--display);font-weight:700;line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0 0 .8em}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:46rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Romanian help and teacher notes */
+.ro{display:none;color:var(--muted);font-style:italic}
+body.ro-on .ro{display:block}
+body.ro-on span.ro.inl{display:inline}
+body:not(.ro-on) .rocell{display:none}
+.teacher{display:none}
+body.teacher-on .teacher{display:block}
+
+/* Film strip navigation */
+.strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--screen);color:var(--screen-fg)}
+.strip::before,.strip::after{content:"";display:block;height:7px;background:repeating-linear-gradient(90deg,var(--perf) 0 9px,transparent 9px 18px)}
+.strip-in{max-width:68rem;display:flex;gap:10px;align-items:center;padding-block:6px}
+.frames{display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:thin;padding-block:2px}
+.frame{flex:none;min-width:42px;height:40px;padding:0 10px;border:1px solid var(--frame-line);background:var(--frame);color:#CBD3D8;border-radius:3px;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-size:.95rem;position:relative}
+.frame b{font-family:var(--display);font-size:1.15rem}
+.frame .fn{display:none;font-size:.85rem}
+@media(min-width:760px){.frame .fn{display:inline}}
+.frame[aria-current="page"]{background:var(--screen-fg);color:var(--screen);border-color:var(--screen-fg)}
+.frame.done::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#6CCB92}
+.tools{display:flex;gap:6px;flex:none}
+.tbtn{height:40px;min-width:44px;padding:0 10px;border:1px solid var(--frame-line);background:transparent;color:#CBD3D8;border-radius:3px;font-size:.85rem}
+.tbtn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* Title card */
+.titlecard{position:relative;overflow:hidden;min-height:23rem;display:flex;align-items:flex-end;color:#fff;background:var(--screen)}
+.titlecard .sky{position:absolute;inset:0;background:linear-gradient(180deg,var(--sky-a) 0%,var(--sky-b) 62%)}
+.titlecard .stars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 27% 35%,#fff,transparent),radial-gradient(1.5px 1.5px at 44% 12%,#fff,transparent),radial-gradient(1px 1px at 58% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 83% 14%,#fff,transparent),radial-gradient(1px 1px at 92% 38%,#fff,transparent),radial-gradient(1px 1px at 6% 44%,#fff,transparent),radial-gradient(1px 1px at 68% 8%,#fff,transparent)}
+.titlecard .sun{position:absolute;left:var(--sx);top:var(--sy);width:58px;height:58px;border-radius:50%;background:var(--sunc);box-shadow:0 0 70px 12px var(--sunc);transform:translate(-50%,-50%)}
+.titlecard .mtn{position:absolute;left:0;right:0;bottom:0;width:100%;height:58%}
+.titlecard .m1{fill:rgba(11,18,23,.55)}
+.titlecard .m2{fill:#0B1217}
+.titlecard .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,rgba(11,18,23,0) 30%,rgba(11,18,23,.55) 62%,rgba(11,18,23,.92) 100%)}
+.titlecard .bar{position:absolute;left:0;right:0;height:5%;background:#000;z-index:2;animation:bars 1.4s cubic-bezier(.2,.7,.2,1) both}
+.titlecard .bar.t{top:0}.titlecard .bar.b{bottom:0}
+@keyframes bars{from{height:46%}to{height:5%}}
+.tc-in{position:relative;z-index:1;width:100%;padding-block:3rem 2.2rem}
+.tc-in .kicker{font-size:1rem;margin:0 0 .4rem;opacity:.9;letter-spacing:.04em}
+.tc-in h1{font-style:italic;font-size:clamp(2.3rem,8vw,4.2rem);margin-bottom:.6rem}
+.tc-in .tag{font-size:1.15rem;max-width:34rem;margin-bottom:.5rem}
+.tc-in .tag.ro{color:#E0E6EA;font-size:1rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:.8rem}
+.chip-i{border:1px solid rgba(255,255,255,.55);border-radius:99px;padding:2px 12px;font-size:.9rem;background:rgba(0,0,0,.25)}
+@media(prefers-reduced-motion:reduce){.titlecard .bar{animation:none;height:5%}}
+
+/* Parts */
+.body{padding-block:2.2rem 3rem}
+.part{margin-top:2.6rem}
+.part:first-child{margin-top:0}
+.part>h2{font-size:1.7rem;margin-bottom:.9rem;display:flex;flex-wrap:wrap;gap:.3rem 1rem;align-items:baseline}
+.count{font-family:var(--body);font-size:.95rem;font-weight:400;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1rem;font-size:.9rem}
+.legend span{padding:1px 10px;border-radius:99px}
+
+/* Story */
+.story .para{position:relative;padding-right:0;margin-bottom:1.2rem}
+.story p.en{font-size:1.28rem;line-height:1.75;margin-bottom:.3rem}
+.story.drop .para:first-child p.en::first-letter{font-family:var(--display);font-size:3.4rem;line-height:.8;float:left;padding:.28rem .5rem 0 0;color:var(--accent);font-weight:700}
+.story .ro{font-size:1rem}
+.say{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:3px 12px 3px 9px;font-size:.88rem;color:var(--accent)}
+.say svg{width:16px;height:16px;fill:currentColor}
+.v{background:var(--accent-soft);color:var(--accent);font-weight:700;padding:0 3px;border-radius:3px}
+.v.irr{background:var(--irr-soft);color:var(--irr)}
+.ex{background:var(--ex-soft);color:var(--ex);font-weight:700;padding:0 3px;border-radius:3px}
+.aux{font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent)}
+.link{font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+
+/* Diagrams */
+.diagram{margin:0 0 1rem}
+.ladder{display:grid;gap:8px}
+.rung{display:grid;grid-template-columns:1.1fr 1fr 1.1fr;gap:8px;align-items:stretch}
+.rung>span{padding:10px 12px;border:1px solid var(--line);background:var(--card);border-radius:8px;display:flex;align-items:center}
+.rung .q{border-color:var(--accent);color:var(--ink)}
+.rung .r{background:var(--accent-soft);border-color:transparent;font-weight:700}
+.rung .x{font-style:italic}
+.ladder .start{padding:10px 14px;background:var(--screen);color:var(--screen-fg);border-radius:8px;font-size:1.05rem}
+.ladder .then{text-align:center;color:var(--muted);font-size:.9rem;margin:-2px 0}
+@media(max-width:560px){.rung{grid-template-columns:1fr}}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem}
+.three>div{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--card)}
+.three h4{font-size:1.9rem;color:var(--accent);margin-bottom:.2rem}
+.three p{margin:0;font-size:.95rem}
+@media(max-width:560px){.three{grid-template-columns:1fr}}
+.fam-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13.5rem,1fr));gap:10px}
+.fam{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--card);min-width:0}
+.fam h4{font-size:1.15rem;margin-bottom:.3rem}
+.fam .eg{font-weight:700;color:var(--irr);margin:0 0 .2rem}
+.fam p{margin:0;font-size:.95rem}
+.eqs{display:grid;gap:8px}
+.eq{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.eq .p{padding:4px 12px;border:1px solid var(--accent);border-radius:6px;font-weight:700;background:var(--card)}
+.eq .op{color:var(--muted)}
+.eq .m{padding:4px 12px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-weight:700}
+.machine{display:grid;gap:14px;margin-bottom:1rem}
+.mrow{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:flex-start}
+.mrow .col{display:flex;flex-direction:column;gap:3px;align-items:center}
+.slot{padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--card);font-weight:700}
+.slot.qw{border-color:var(--ex);color:var(--ex);background:var(--ex-soft)}
+.slot.ax{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
+.slot.vb{border-color:var(--irr);color:var(--irr);background:var(--irr-soft)}
+.col .lab{font-size:.8rem;color:var(--muted)}
+.bigidea{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--card)}
+.bigidea .arrowrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:1.1rem}
+.link-grid{display:grid;gap:10px}
+.lk{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--card)}
+.lk .sent{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px}
+.lk .sent span{padding:3px 10px;border-radius:6px}
+.lk .a{background:var(--accent-soft)}
+.lk .b{background:var(--ex-soft)}
+.lk .l{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.lk small{color:var(--muted)}
+.arc{width:100%;height:auto;display:block;margin-bottom:.6rem}
+.arc .curve{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round}
+.arc .dot{fill:var(--accent)}
+.arc .num{fill:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:22px;text-anchor:middle}
+.arc .gnd{stroke:var(--line);stroke-width:2}
+.beats{display:grid;gap:8px;counter-reset:b;padding:0;margin:0;list-style:none}
+.beats li{counter-increment:b;display:grid;grid-template-columns:2rem 1fr;gap:10px;align-items:start}
+.beats li::before{content:counter(b);font-family:var(--display);font-weight:700;background:var(--accent);color:var(--accent-ink);width:1.8rem;height:1.8rem;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.beats b{display:block}
+.beats .ro{font-size:.95rem}
+
+/* Cheat sheets */
+.sheet{background:var(--card);border:2px dashed var(--line);border-radius:12px;padding:16px 16px 8px}
+.sheet h3{font-size:1.3rem;margin:.2rem 0 .6rem}
+.sheet h3:not(:first-child){margin-top:1.2rem}
+.tblwrap{overflow-x:auto;margin-bottom:.8rem}
+.tbl{border-collapse:collapse;width:100%;font-size:.97rem}
+.tbl th,.tbl td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-weight:700;color:var(--muted);font-size:.88rem}
+.tbl td:first-child{font-weight:700}
+.tbl .past{color:var(--irr);font-weight:700}
+.sheet .ro{font-size:.95rem;margin-bottom:.8rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+
+/* Exercises */
+.exb{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:16px;margin-bottom:16px}
+.exb h3{font-size:1.25rem;margin-bottom:.3rem}
+.exb .intro{margin-bottom:.8rem}
+.exb .row{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.exb .row:first-of-type{border-top:0}
+.gap,.long,select.sel{border:2px solid var(--line);background:var(--paper);border-radius:6px;padding:4px 8px;min-width:0}
+.gap{width:9rem}
+.long{flex:1 1 14rem}
+select.sel{max-width:100%}
+.base{color:var(--muted)}
+.fb{font-size:.92rem;min-width:0}
+.row.good .fb,.q.good .fb,.bld.good .fb{color:var(--good);font-weight:700}
+.row.bad .fb,.q.bad .fb,.bld.bad .fb{color:var(--bad)}
+.row.good .gap,.row.good select.sel{border-color:var(--good);background:var(--good-soft)}
+.row.bad .gap,.row.bad select.sel{border-color:var(--bad)}
+.bk{display:flex;flex-wrap:wrap;gap:6px}
+.bkt,.opt,.btn{border:2px solid var(--line);background:var(--paper);border-radius:8px;padding:4px 12px}
+.bkt:hover,.opt:hover,.btn:hover{border-color:var(--accent)}
+.bkt.wrong,.opt.wrong{border-color:var(--bad);background:var(--bad-soft);text-decoration:line-through;color:var(--muted)}
+.bkt.right,.opt.right{border-color:var(--good);background:var(--good-soft);font-weight:700}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.sortrow .w{font-weight:700;min-width:5.5rem}
+.q{padding:10px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0}
+.q .qt{font-weight:700;margin-bottom:.4rem}
+.opts{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.q .fb{margin:.4rem 0 0}
+.bld{padding:10px 0;border-top:1px solid var(--line)}
+.bld:first-of-type{border-top:0}
+.bld .line{min-height:3rem;border:2px dashed var(--line);border-radius:8px;padding:6px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center}
+.bld .pool{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.chipw{border:2px solid var(--accent);background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:3px 12px;font-weight:700}
+.bld .bar2{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.flips{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:10px;margin-bottom:.6rem}
+.flipc{height:5rem;border:2px solid var(--line);border-radius:10px;background:var(--paper);font-size:1.25rem;font-weight:700;transition:background .2s}
+.flipc .b{display:none}
+.flipc.flipped{background:var(--irr-soft);border-color:var(--irr);color:var(--irr)}
+.flipc.flipped .f{display:none}
+.flipc.flipped .b{display:inline}
+.flipc small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+
+/* Talk, notes */
+.talk{margin:0;padding-left:1.2rem}
+.talk li{margin-bottom:.6rem}
+.talkbox{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--card)}
+.notes{border:2px solid var(--ex);background:var(--ex-soft);border-radius:12px;padding:14px 16px;margin-top:2rem}
+.notes h3{font-size:1.15rem;margin-bottom:.4rem}
+.notes ul{margin:.3rem 0 0;padding-left:1.2rem}
+.chnav{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-top:3rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+.chnav a{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);padding:10px 16px;border:1px solid var(--line);border-radius:10px;background:var(--card);min-width:9rem}
+.chnav a small{color:var(--muted)}
+.chnav a b{font-family:var(--display);font-size:1.15rem}
+.chnav .nx{margin-left:auto;text-align:right}
+
+/* Cover programme */
+.prog{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.prog a{display:grid;grid-template-columns:2.4rem 1fr auto;gap:12px;align-items:center;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px}
+.prog .n{font-family:var(--display);font-size:1.7rem;font-weight:700;color:var(--accent)}
+.prog b{display:block}
+.prog small{color:var(--muted)}
+.prog .m{text-align:right;color:var(--muted);font-size:.9rem}
+.bar-time{display:flex;height:14px;border-radius:99px;overflow:hidden;margin:1rem 0 .4rem}
+.bar-time i{display:block;border-right:2px solid var(--paper)}
+.bar-time i:nth-child(6){background:var(--ex);border-right:0}
+.bar-time i:not(:nth-child(6)){background:var(--accent)}
+.timer{font-family:var(--display);font-size:3rem;font-weight:700;margin:0 0 .4rem}
+.chk{display:flex;gap:10px;align-items:flex-start;margin-bottom:.5rem}
+.chk input{width:1.3rem;height:1.3rem;margin-top:.2rem;accent-color:var(--accent)}
+.promptcard{border:2px solid var(--accent);border-radius:12px;padding:16px;margin:.8rem 0;background:var(--accent-soft)}
+.promptcard h3{font-size:1.5rem}
+.foot{padding-block:2rem 3rem;color:var(--muted);font-size:.9rem}
+.foot button{border:0;background:none;color:var(--accent);text-decoration:underline;padding:0}
+</style>
+
+<div class="strip"><div class="wrap strip-in">
+  <nav class="frames" id="frames" aria-label="Chapters"></nav>
+  <div class="tools">
+    <button class="tbtn" id="tro" type="button" aria-pressed="true" title="Show or hide the Romanian help">RO</button>
+    <button class="tbtn" id="tte" type="button" aria-pressed="false" title="Show or hide the teacher notes">Notes</button>
+  </div>
+</div></div>
+<main id="stage"></main>
+<footer class="wrap foot">Your progress is saved in this browser. <button type="button" id="reset">Reset my progress</button></footer>
+
+<script>
+(function(){
+'use strict';
+var KEY='lesson5-mom-v1';
+var S={done:{},ro:true,teacher:false,chk:[]};
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==='object'){S.done=p.done||{};S.ro=p.ro!==false;S.teacher=!!p.teacher;S.chk=p.chk||[];}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var $=function(s,r){return (r||document).querySelector(s);};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function plain(s){return s.replace(/\[\[|\]\]|\{\{|\}\}|\(\(|\)\)|\^\^|@@/g,'');}
+function fmt(s){return s.replace(/\[\[(.+?)\]\]/g,'<span class="v">$1</span>').replace(/\{\{(.+?)\}\}/g,'<span class="v irr">$1</span>').replace(/\(\((.+?)\)\)/g,'<span class="ex">$1</span>').replace(/\^\^(.+?)\^\^/g,'<span class="aux">$1</span>').replace(/@@(.+?)@@/g,'<span class="link">$1</span>');}
+function say(t){try{if(!('speechSynthesis' in window))return;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=0.85;window.speechSynthesis.speak(u);}catch(e){}}
+var ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+function sayBtn(t,label){return '<button type="button" class="say" data-say="'+esc(t)+'" aria-label="Listen">'+ICON+(label||'Listen')+'</button>';}
+function shuf(a,seed){var r=a.slice(),s=seed*9301+49297;for(var i=r.length-1;i>0;i--){s=(s*9301+49297)%233280;var j=Math.floor(s/233280*(i+1));var t=r[i];r[i]=r[j];r[j]=t;}return r;}
+
+/* ---------- Cheat sheet helpers ---------- */
+function tbl(head,rows,roCols){
+  return '<div class="tblwrap"><table class="tbl"><thead><tr>'+head.map(function(h,i){return '<th'+(roCols&&roCols.indexOf(i)>-1?' class="rocell"':'')+'>'+h+'</th>';}).join('')+'</tr></thead><tbody>'+
+  rows.map(function(r){return '<tr>'+r.map(function(c,i){return '<td'+(roCols&&roCols.indexOf(i)>-1?' class="rocell"':'')+'>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>';
+}
+var VERBS=[
+['go','went','a merge'],['be','was / were','a fi'],['have','had','a avea'],['do','did','a face'],['see','saw','a vedea'],['take','took','a lua'],
+['give','gave','a da'],['make','made','a face, a produce'],['say','said','a spune'],['tell','told','a spune, a povesti'],['come','came','a veni'],['get','got','a primi, a ajunge'],
+['eat','ate','a mânca'],['find','found','a găsi'],['think','thought','a gândi'],['buy','bought','a cumpăra'],['bring','brought','a aduce'],['leave','left','a pleca, a lăsa'],
+['feel','felt','a simți'],['keep','kept','a păstra'],['sleep','slept','a dormi'],['know','knew','a ști'],['speak','spoke','a vorbi'],['forget','forgot','a uita'],
+['lose','lost','a pierde'],['meet','met','a întâlni'],['run','ran','a alerga'],['write','wrote','a scrie'],['sit','sat','a se așeza'],['stand','stood','a sta în picioare']];
+var PHR=[
+['run into','meet by chance','a da peste cineva','I ran into my neighbour at the shop.'],
+['catch up','share news after a while','a depăna noutăți','We caught up over coffee.'],
+['give up','stop trying','a renunța','He gave up after three tries.'],
+['make up my mind','decide','a mă hotărî','I made up my mind quickly.'],
+['set off','start a trip','a porni la drum','We set off at seven.'],
+['turn out','end up being (a surprise)','a se dovedi','It turned out to be easy.'],
+['find out','learn a fact','a afla','I found out the truth yesterday.'],
+['had no idea','did not know at all','n-aveam nicio idee','I had no idea it was so late.'],
+['take a while','take a long time','a dura o vreme','The bus took a while.'],
+["couldn't help (laughing)",'could not stop myself','nu m-am putut abține','I couldn\'t help laughing.'],
+['worth it','good enough for the effort','a merita','The long walk was worth it.'],
+['go by','pass (time)','a trece (timpul)','The time went by fast.'],
+['show up','arrive','a apărea, a se ivi','He showed up an hour late.'],
+['figure out','understand, solve','a-și da seama','She figured out the problem.'],
+['get used to','become comfortable with','a se obișnui','I got used to the cold.']];
+var SH={
+s1:'<h3>Regular verbs: add -ed</h3>'+tbl(['If the verb…','Do this','Example'],[
+ ['ends in -e','add -d','hope → hoped'],
+ ['ends in consonant + y','y → -ied','study → studied, hurry → hurried'],
+ ['ends in vowel + y','add -ed','stay → stayed, play → played'],
+ ['is short: consonant, vowel, consonant','double the last letter, add -ed','stop → stopped, plan → planned'],
+ ['anything else','add -ed','walk → walked, ask → asked']])+
+ '<h3>How -ed sounds</h3>'+tbl(['After…','You hear','Example'],[
+ ['t or d','an extra syllable: <b>id</b>','waited, wanted, started'],
+ ['p, k, f, s, sh, ch','<b>t</b>','asked, watched, hoped'],
+ ['everything else','<b>d</b>','smiled, arrived, stayed']])+
+ '<p class="ro">Regula: adaugi -ed. Verb terminat în -e: doar -d. Consoană + y: -ied. Verb scurt (consoană, vocală, consoană): dublezi consoana. Pronunția: după t sau d auzi un „id” în plus; altfel auzi t sau d.</p>',
+s2:'<h3>30 irregular verbs you will use all the time</h3><div class="two">'+
+ tbl(['Now','Before','Română'],VERBS.slice(0,15).map(function(v){return [v[0],'<span class="past">'+v[1]+'</span>',v[2]];}),[2])+
+ tbl(['Now','Before','Română'],VERBS.slice(15).map(function(v){return [v[0],'<span class="past">'+v[1]+'</span>',v[2]];}),[2])+'</div>'+
+ '<p>Careful: <b>was</b> goes with I, he, she, it. <b>Were</b> goes with you, we, they.</p>'+
+ '<p class="ro">Verbele neregulate nu primesc -ed. Se învață pe familii și în propoziții reale. Atenție: „was” cu I, he, she, it; „were” cu you, we, they.</p>',
+s3:'<h3>15 phrases from books and real talk</h3>'+tbl(['Phrase','It means','Română','In a sentence'],PHR.map(function(r){return [r[0],r[1],r[2],'<i>'+r[3]+'</i>'];}),[2])+
+ '<p>In the past, only the <b>first word</b> changes: give up → <b>gave</b> up, run into → <b>ran</b> into, set off → <b>set</b> off.</p>'+
+ '<p class="ro">Învață expresia ca pe un întreg, nu cuvânt cu cuvânt. La trecut se schimbă doar primul cuvânt.</p>',
+s4:'<h3>Questions in the past</h3>'+tbl(['Type','Pattern','Example'],[
+ ['Question','(question word) + <b>did</b> + who + <b>base verb</b> + …?','Where did you buy those boots?'],
+ ['Yes / no','<b>Did</b> + who + <b>base verb</b> + …?','Did you enjoy the hike?'],
+ ['Negative','who + <b>didn\'t</b> + <b>base verb</b>','I didn\'t buy them.'],
+ ['Short answer','Yes, I <b>did</b>. / No, I <b>didn\'t</b>.','Did you go? Yes, I did.'],
+ ['With was / were','<b>Was / were</b> + who + …? (no did)','Where were you? Was it cold?']])+
+ '<h3>Question words</h3>'+tbl(['Word','Română'],[['what','ce'],['where','unde'],['when','când'],['who','cine'],['why','de ce'],['how','cum'],['how long','cât timp'],['how much / how many','cât / câți']],[1])+
+ '<p><b>The past lives in “did”.</b> After did, the verb goes back to its simple form: did you <b>go</b>, not did you went.</p>'+
+ '<p class="ro">Trecutul stă în „did”. După did, verbul revine la forma simplă: did you go, nu did you went.</p>',
+s5:'<h3>Linking words</h3>'+tbl(['Word','Job','Example'],[
+ ['because','gives the reason','I stayed in because it was cold.'],
+ ['so','gives the result','It was cold, so I stayed in.'],
+ ['but','shows a contrast','It was cold, but I went out.'],
+ ['although','contrast, at the start','Although it was cold, I went out.'],
+ ['at first','the beginning','At first I felt nervous.'],
+ ['in the end','the final result','In the end, we found the road.']])+
+ '<h3>Feelings</h3>'+tbl(['Word','Română'],[['nervous','emoționat, neliniștit'],['proud','mândru'],['relieved','ușurat'],['disappointed','dezamăgit'],['surprised','surprins'],['embarrassed','jenat'],['curious','curios'],['delighted','încântat']],[1])+
+ '<h3>Starting an opinion</h3><p>I thought… · I felt… · It seemed… · I was surprised that… · I wasn\'t sure… · I didn\'t expect… · To be honest, …</p>'+
+ '<p class="ro">Cu <b>because</b> dai motivul, cu <b>so</b> dai rezultatul. Cu <b>but</b> și <b>although</b> arăți un contrast.</p>',
+s6:'<h3>Tell a story: five beats</h3><p>1 Where and when · 2 The problem · 3 What happened · 4 The ending · 5 What I thought or felt</p>'+
+ '<h3>Start it</h3><p>Let me tell you about… · It happened when… · Last summer… · So, …</p>'+
+ '<h3>Keep it moving</h3><p>Then… · After that… · All of a sudden… · The funny thing was… · At first… · In the end…</p>'+
+ '<h3>React to a story</h3><p>Really? · What happened next? · No way! · How did you feel? · Why did you…? · That sounds…</p>'+
+ '<h3>Self-check</h3><p>3 regular verbs, 3 irregular verbs, 1 phrase, 1 question with did, 1 linking word, 1 feeling or opinion.</p>'+
+ '<p class="ro">Povestește în cinci pași: unde și când, problema, ce s-a întâmplat, finalul, ce ai gândit sau simțit.</p>'
+};
+function sheet(k){return '<div class="sheet">'+SH[k]+'</div>';}
+
+/* ---------- Chapter data ---------- */
+var CH=[
+{id:'ch1',n:'Chapter 1',title:'The Way It Was',mins:8,focus:'Regular verbs',
+ tag:'Regular verbs add -ed. The rule is easy. The sound is the part to practise.',
+ tagro:'Verbele regulate primesc -ed. Regula e ușoară. Pronunția e partea de exersat.',
+ sky:['#243B55','#E3A978'],sun:['74%','44%','#FFE2B0'],
+ legend:[['v','regular verb']],drop:true,
+ story:[
+  {en:'On Friday morning, Elena [[walked]] to the station with one small bag. She [[hoped]] the weather [[stayed]] warm. The train [[arrived]] late, so she [[waited]] and [[watched]] the people around her.',
+   ro:'Vineri dimineața, Elena a mers pe jos până la gară cu o geantă mică. Spera ca vremea să rămână caldă. Trenul a sosit târziu, așa că a așteptat și s-a uitat la oamenii din jur.'},
+  {en:'A man [[smiled]] at her and [[asked]] about the time. She [[checked]] her phone, [[answered]], and [[studied]] the map one more time. Then the train [[stopped]], and everyone [[hurried]] to the doors.',
+   ro:'Un bărbat i-a zâmbit și a întrebat-o cât e ceasul. Ea s-a uitat la telefon, a răspuns și a mai studiat o dată harta. Apoi trenul s-a oprit și toată lumea s-a grăbit spre uși.'}],
+ howTitle:'How -ed works',
+ how:function(){return '<div class="diagram"><div class="ladder">'+
+  '<div class="start">Start with the simple verb: <b>walk</b>, <b>hope</b>, <b>study</b>, <b>stop</b></div>'+
+  '<div class="then">Ask these questions, in this order. Use the first answer that is yes.</div>'+
+  '<div class="rung"><span class="q">Does it end in <b>&nbsp;-e</b>?</span><span class="r">Add <b>&nbsp;-d</b></span><span class="x">hope → hoped</span></div>'+
+  '<div class="rung"><span class="q">Consonant + <b>&nbsp;-y</b>?</span><span class="r">Change y to <b>&nbsp;-ied</b></span><span class="x">study → studied (but stay → stayed)</span></div>'+
+  '<div class="rung"><span class="q">Short: consonant, vowel, consonant?</span><span class="r">Double the last letter + <b>&nbsp;-ed</b></span><span class="x">stop → stopped</span></div>'+
+  '<div class="rung"><span class="q">None of these?</span><span class="r">Add <b>&nbsp;-ed</b></span><span class="x">walk → walked</span></div>'+
+  '</div></div>'+
+  '<p>Then there is the sound. Your mouth does most of this for you. Only after <b>t</b> or <b>d</b> do you add a whole new syllable.</p>'+
+  '<div class="three"><div><h4>t</h4><p>walked, asked, watched</p></div><div><h4>d</h4><p>smiled, arrived, stayed</p></div><div><h4>id</h4><p>waited, wanted, started</p></div></div>'+
+  '<p class="ro" style="margin-top:.8rem">Verbul simplu primește -ed. Doar după t sau d auzi o silabă nouă: „id”.</p>';},
+ ex:[
+  {t:'fill',id:'a',title:'Write the past form',intro:'Check the ladder if you are not sure. Press Enter to check.',items:[
+   {pre:'She',base:'carry',post:'her bag up the stairs.',ans:['carried'],hint:'Consonant + y: change y to -ied.'},
+   {pre:'The bus',base:'stop',post:'at the corner.',ans:['stopped'],hint:'Short verb: double the last letter.'},
+   {pre:'We',base:'hope',post:'for good news.',ans:['hoped'],hint:'Ends in -e: just add -d.'},
+   {pre:'He',base:'play',post:'football as a boy.',ans:['played'],hint:'Vowel + y: keep the y, add -ed.'},
+   {pre:'I',base:'study',post:'all evening.',ans:['studied'],hint:'Consonant + y: change y to -ied.'},
+   {pre:'They',base:'plan',post:'a surprise party.',ans:['planned'],hint:'Short verb: double the last letter.'}]},
+  {t:'sort',id:'b',title:'Listen, then choose the sound',intro:'Press Listen, then pick the sound you hear at the end of the word.',buckets:['t','d','id'],items:[
+   ['walked',0],['asked',0],['watched',0],['smiled',1],['arrived',1],['stayed',1],['waited',2],['wanted',2],['started',2]]},
+  {t:'choice',id:'c',title:'Spot the correct spelling',intro:'Only one spelling in each group is right.',items:[
+   {q:'Choose the correct sentence.',o:['She stoped at the door.','She stopped at the door.','She stopt at the door.'],a:1,why:'Short verb: double the p, then add -ed.'},
+   {q:'Choose the correct sentence.',o:['He studyed all night.','He studiedd all night.','He studied all night.'],a:2,why:'Consonant + y: change y to -ied.'},
+   {q:'Choose the correct sentence.',o:['We hoped the rain would stop.','We hopped the rain would stop.','We hopeed the rain would stop.'],a:0,why:'Ends in -e: just add -d. (Hopped is from hop.)'},
+   {q:'Choose the correct sentence.',o:['They playd in the garden.','They plaied in the garden.','They played in the garden.'],a:2,why:'Vowel + y: keep the y, add -ed.'}]},
+  {t:'build',id:'d',title:'Put the story in order',intro:'Tap the sentences in the order they happened in the scene.',items:[
+   ['Elena walked to the station.','The train arrived late.','She waited and watched the people.','A man smiled at her.','Then the train stopped.']]}],
+ sheet:'s1',
+ talk:['What did you do this morning? Use three verbs that end in -ed.','How did you come here today? Who did you meet, and what did you notice?'],
+ teacher:'<p><b>8 minutes.</b> Scene 2, how it works 1, exercises 4, talk 1.</p><ul><li>Read the scene aloud together. She repeats each coloured verb after you.</li><li>Do not teach the three sounds as a rule list. Say walked, smiled and waited, then ask what she hears.</li><li>Ask her to find the verb that doubles a letter (stopped) and the ones that change y to i (studied, hurried).</li><li>Listen for: every -ed said as a separate syllable (walk-ed).</li><li>There are more exercises than one hour needs. Choose the ones that fit, and leave the rest as homework.</li></ul>'},
+
+{id:'ch2',n:'Chapter 2',title:'Rules That Broke',mins:10,focus:'Irregular verbs',
+ tag:'Irregular verbs ignore the -ed rule. You do not need all of them. They come in families, and a few are used every day.',
+ tagro:'Verbele neregulate nu primesc -ed. Nu trebuie să le știi pe toate. Vin în familii, iar câteva se folosesc zilnic.',
+ sky:['#2E5F7A','#A9D3DA'],sun:['66%','22%','#FFF3C9'],
+ legend:[['v irr','irregular verb'],['v','regular verb']],drop:true,
+ story:[
+  {en:'On the train, Elena {{took}} out a book, but she couldn\'t read. She {{felt}} tired, so she {{slept}} for an hour. When she {{woke}} up, the train {{was}} already in the mountains.',
+   ro:'În tren, Elena a scos o carte, dar nu a putut citi. Se simțea obosită, așa că a dormit o oră. Când s-a trezit, trenul era deja în munți.'},
+  {en:'She {{saw}} snow on the hills and {{thought}}, “Oh no, I {{forgot}} my gloves!” A woman next to her {{gave}} her a pair of wool socks and {{said}}, “Put them on your hands. It [[worked]] for me once.”',
+   ro:'A văzut zăpadă pe dealuri și s-a gândit: „Vai, mi-am uitat mănușile!” O femeie de lângă ea i-a dat o pereche de șosete de lână și i-a spus: „Pune-le pe mâini. Mie mi-a mers odată.”'}],
+ howTitle:'Meet the families',
+ how:function(){return '<div class="fam-grid">'+
+  '<div class="fam"><h4>Nothing changes</h4><p class="eg">put → put</p><p>cut, hit, let, set</p></div>'+
+  '<div class="fam"><h4>-ought / -aught</h4><p class="eg">buy → bought</p><p>bring → brought, think → thought, catch → caught, teach → taught</p></div>'+
+  '<div class="fam"><h4>Ends in -t</h4><p class="eg">send → sent</p><p>spend → spent, leave → left, feel → felt, keep → kept, sleep → slept</p></div>'+
+  '<div class="fam"><h4>-ew</h4><p class="eg">know → knew</p><p>grow → grew, throw → threw, fly → flew</p></div>'+
+  '<div class="fam"><h4>Own story</h4><p class="eg">go → went</p><p>be → was / were, see → saw, take → took, give → gave, say → said, wake → woke, forget → forgot</p></div></div>'+
+  '<p style="margin-top:1rem">How to learn them: meet them in a family, say them in a real sentence about your life, and come back to them next lesson.</p>'+
+  '<p class="ro">Învață-le pe familii, apoi spune-le în propoziții despre viața ta. Nu le memora ca pe o listă.</p>';},
+ ex:[
+  {t:'flip',id:'a',title:'Say it, then flip it',intro:'Say the past form out loud. Then flip the card. Then say one real sentence with it.',items:[
+   ['go','went'],['see','saw'],['take','took'],['eat','ate'],['buy','bought'],['leave','left'],['feel','felt'],['know','knew'],['forget','forgot'],['find','found'],['meet','met'],['tell','told']]},
+  {t:'sort',id:'b',title:'Which family?',intro:'Pick the family of the past form.',buckets:['Nothing changes','-ought / -aught','Ends in -t','-ew','Own story'],items:[
+   ['cut',0],['buy',1],['send',2],['know',3],['go',4],['hit',0],['bring',1],['keep',2],['fly',3],['take',4],['catch',1],['spend',2]]},
+  {t:'fill',id:'c',title:'Write the past form',intro:'Press Enter to check.',items:[
+   {pre:'Yesterday I',base:'go',post:'to the market.',ans:['went'],hint:'Own story: go → went.'},
+   {pre:'She',base:'buy',post:'fresh bread.',ans:['bought'],hint:'Family -ought.'},
+   {pre:'We',base:'eat',post:'outside.',ans:['ate'],hint:'Own story: eat → ate.'},
+   {pre:'He',base:'tell',post:'me a secret.',ans:['told'],hint:'tell → told.'},
+   {pre:'I',base:'lose',post:'my keys.',ans:['lost'],hint:'Ends in -t: lose → lost.'},
+   {pre:'They',base:'come',post:'home late.',ans:['came'],hint:'Own story: come → came.'}]},
+  {t:'open',id:'d',title:'Say it about your life',intro:'Finish each sentence with a real past verb. Press Hear it, then say it again without looking.',items:[
+   'Yesterday I went to','Last week I bought','I forgot to','On Sunday I saw','When I was young, I ate']}],
+ sheet:'s2',
+ talk:['Tell me about the last time you lost something. What happened?','What did you buy last week, and who did you give it to?'],
+ teacher:'<p><b>10 minutes.</b> Scene 2, families 2, flip cards 2, sorting and writing 3, talk 1.</p><ul><li>The goal is to recognise families and recall the verbs she really uses. Do not ask for the whole list.</li><li>Flip cards: she says the past form aloud before flipping, then makes one real sentence. That is what moves it into memory.</li><li>Listen for buyed, goed, eated, thinked. These mistakes show she has understood the -ed rule. Tell her so.</li><li>There are more exercises than one hour needs. Choose the ones that fit, and leave the rest as homework.</li></ul>'},
+
+{id:'ch3',n:'Chapter 3',title:'What People Actually Say',mins:9,focus:'Everyday phrases',
+ tag:'Books and conversations use the same small phrases again and again. Learn each one as a whole piece, not word by word.',
+ tagro:'Cărțile și conversațiile folosesc aceleași expresii mici. Învață fiecare expresie ca pe un întreg, nu cuvânt cu cuvânt.',
+ sky:['#1F6F8B','#BFE0DD'],sun:['50%','12%','#FFFBE0'],
+ legend:[['ex','everyday phrase']],drop:true,
+ story:[
+  {en:'At the hotel, Elena ((ran into)) an old friend, Maria. “I ((had no idea)) you were here!” Maria said. They ((caught up)) over coffee, and the time ((went by)) very fast.',
+   ro:'La hotel, Elena a dat peste o veche prietenă, Maria. „N-aveam nicio idee că ești aici!” a spus Maria. Au depănat noutăți la o cafea, iar timpul a trecut foarte repede.'},
+  {en:'The next morning, Maria wanted to hike up the mountain. At first, Elena almost ((gave up)) before they started, because it was cold. Then she ((made up her mind)): she wanted to try. They ((set off)) at nine.',
+   ro:'A doua zi dimineață, Maria a vrut să urce pe munte. La început, Elena aproape a renunțat înainte să înceapă, pentru că era frig. Apoi s-a hotărât: voia să încerce. Au pornit la nouă.'},
+  {en:'The hike ((took a while)), and Elena ((couldn\'t help)) laughing at the wool socks on her hands. But it ((turned out)) to be the best day of the trip. In the end, it was ((worth it)).',
+   ro:'Drumeția a durat o vreme, iar Elena nu s-a putut abține să nu râdă de șosetele de lână de pe mâinile ei. Dar s-a dovedit a fi cea mai frumoasă zi din călătorie. Până la urmă, a meritat.'}],
+ howTitle:'Small word, new meaning',
+ how:function(){
+  var E=[['give','up','stop trying'],['run','into','meet by chance'],['set','off','start a trip'],['find','out','learn a fact'],['turn','out','end up being'],['catch','up','share news']];
+  return '<div class="eqs diagram">'+E.map(function(e){return '<div class="eq"><span class="p">'+e[0]+'</span><span class="op">+</span><span class="p">'+e[1]+'</span><span class="op">=</span><span class="m">'+e[2]+'</span></div>';}).join('')+'</div>'+
+  '<p>The small word changes the meaning. In the past, only the first word changes: give up → <b>gave</b> up, run into → <b>ran</b> into, set off → <b>set</b> off.</p>'+
+  '<p class="ro">Cuvântul mic schimbă sensul. La trecut se schimbă doar primul cuvânt.</p>';},
+ ex:[
+  {t:'choice',id:'a',title:'What does it mean?',intro:'Pick the meaning that fits.',items:[
+   {q:'“Elena almost gave up.”',o:['She started again.','She nearly stopped trying.','She gave a present.'],a:1,why:'Give up = stop trying.'},
+   {q:'“I made up my mind.”',o:['I changed my clothes.','I forgot everything.','I decided.'],a:2,why:'Make up my mind = decide.'},
+   {q:'“It turned out to be easy.”',o:['In the end, it was easy (a surprise).','It turned around and left.','Someone turned it off.'],a:0,why:'Turn out = end up being.'},
+   {q:'“We set off at seven.”',o:['We went to sleep.','We turned off the light.','We started our trip.'],a:2,why:'Set off = start a trip.'},
+   {q:'“I had no idea.”',o:['I did not know at all.','I had no plan.','I had no time.'],a:0,why:'Had no idea = did not know.'}]},
+  {t:'select',id:'b',title:'Fill the gap',intro:'Choose the phrase that fits each sentence.',bank:['set off','ran into','figured out','found out','gave up','turned out','made up my mind'],items:[
+   {pre:'We',post:'at seven, so we missed the traffic.',a:'set off'},
+   {pre:'Yesterday I',post:'my old teacher in the supermarket.',a:'ran into'},
+   {pre:'I',post:'the puzzle after an hour. It was very hard.',a:'figured out'},
+   {pre:'I',post:'the shop closed early when I read the sign.',a:'found out'},
+   {pre:'The test was too difficult, so he',post:'.',a:'gave up'},
+   {pre:'I was afraid of the exam, but it',post:'to be easy.',a:'turned out'},
+   {pre:'I thought about it all night, and then I',post:'.',a:'made up my mind'}]},
+  {t:'open',id:'c',title:'Use the phrase in your own sentence',intro:'Finish each sentence about your own life. Press Hear it, then say it again from memory.',items:[
+   'Last year I ran into','I almost gave up when','It turned out that','I had no idea that','We set off at']}],
+ sheet:'s3',
+ talk:['Tell me about a time you ran into someone you had not seen for years.','Did anything ever turn out better than you expected?'],
+ teacher:'<p><b>9 minutes.</b> Scene 3, equations 1, exercises 3, talk 2.</p><ul><li>Teach each phrase as one block. Use the Romanian only to confirm the meaning.</li><li>Ask her to use two phrases in a real sentence about last week.</li><li>She already hears these on podcasts. Ask which ones she recognised.</li><li>There are more exercises than one hour needs. Choose the ones that fit, and leave the rest as homework.</li></ul>'},
+
+{id:'ch4',n:'Chapter 4',title:'Asking, in the Past',mins:9,focus:'Questions with did',
+ tag:'In a past question, the word did does the work. The main verb goes back to its simple form.',
+ tagro:'Într-o întrebare la trecut, „did” face treaba. Verbul principal revine la forma simplă.',
+ sky:['#3A4F7A','#E3B7A0'],sun:['30%','26%','#FFD9B0'],
+ legend:[['aux','did / didn\'t']],drop:false,
+ story:[
+  {en:'“^^Did^^ you enjoy the hike?” Maria asked.',ro:'„Ți-a plăcut drumeția?” a întrebat Maria.'},
+  {en:'“I ^^did^^!” Elena said. “But why ^^didn\'t^^ you tell me about the cold?”',ro:'„Da!” a spus Elena. „Dar de ce nu mi-ai spus despre frig?”'},
+  {en:'“I ^^did^^ tell you! What ^^did^^ you think the snow was for?”',ro:'„Ți-am spus! Pentru ce credeai că e zăpada?”'},
+  {en:'Elena laughed. “Where ^^did^^ you buy those boots? And how much ^^did^^ they cost?”',ro:'Elena a râs. „Unde ai cumpărat ghetele astea? Și cât au costat?”'}],
+ howTitle:'The question machine',
+ how:function(){
+  function col(c,t,l){return '<div class="col"><span class="slot '+c+'">'+t+'</span><span class="lab">'+l+'</span></div>';}
+  return '<div class="machine diagram">'+
+   '<div class="mrow">'+col('qw','Where','question word')+col('ax','did','helper')+col('','you','who')+col('vb','buy','simple verb')+col('','those boots?','the rest')+'</div>'+
+   '<div class="mrow">'+col('ax','Did','helper')+col('','you','who')+col('vb','enjoy','simple verb')+col('','the hike?','the rest')+'</div>'+
+   '<div class="mrow">'+col('','I','who')+col('ax','didn\'t','helper')+col('vb','buy','simple verb')+col('','them.','the rest')+'</div></div>'+
+  '<div class="bigidea"><p style="margin-bottom:.4rem"><b>Where did the past go?</b> Into the helper.</p><div class="arrowrow"><span>You <b class="v irr" style="padding:0 4px">bought</b> boots.</span><span>→</span><span><b class="aux">Did</b> you <b>buy</b> boots?</span></div>'+
+  '<p style="margin:.6rem 0 0">Exception: with <b>was / were</b> there is no did. Was it cold? Where were you?</p></div>'+
+  '<p class="ro" style="margin-top:.8rem">Trecutul trece în „did”, iar verbul rămâne la forma simplă. Excepție: was / were nu folosesc did.</p>';},
+ ex:[
+  {t:'build',id:'a',title:'Build the question',intro:'Tap the words in the right order. Tap a word in the sentence to take it back.',items:[
+   ['Where','did','you','go','yesterday','?'],['Did','she','enjoy','the','film','?'],['Why','didn\'t','he','call','me','?'],['What','did','they','eat','for','dinner','?'],['How','long','did','it','take','?']]},
+  {t:'choice',id:'b',title:'Which one is correct?',intro:'Only one sentence in each group is right.',items:[
+   {q:'Choose the correct question.',o:['Did you went there?','You did go there?','Did you go there?'],a:2,why:'After did, use the simple verb: go.'},
+   {q:'Choose the correct question.',o:['Where did you bought the boots?','Where did you buy the boots?','Where you bought the boots?'],a:1,why:'did + buy. The past is already in did.'},
+   {q:'Choose the correct question.',o:['What time did the train arrive?','What time did the train arrived?','What time arrived the train?'],a:0,why:'did + arrive.'},
+   {q:'Choose the correct question.',o:['Did it was cold?','Was it cold?','Did be it cold?'],a:1,why:'With was / were, there is no did.'}]},
+  {t:'choice',id:'c',title:'Which question fits the answer?',intro:'Read the answer. Pick the question that goes with it.',items:[
+   {q:'Answer: “I bought them in Brașov.”',o:['Where did you bought them?','Where did you buy them?','Where you bought them?'],a:1,why:'Where + did + you + buy.'},
+   {q:'Answer: “No, I didn\'t.”',o:['Did you see the film?','Do you saw the film?','Did you saw the film?'],a:0,why:'Did you see…? is the only correct question.'},
+   {q:'Answer: “It took two hours.”',o:['How long it took?','How long took it?','How long did it take?'],a:2,why:'How long + did + it + take.'},
+   {q:'Answer: “Because I was tired.”',o:['Why did you leave early?','Why you left early?','Why did you left early?'],a:0,why:'Why + did + you + leave.'}]},
+  {t:'open',id:'d',title:'Now you ask',intro:'Finish each question about last weekend. Press Hear it, then ask it aloud to your teacher.',items:[
+   'Where did you','What did you','Why didn\'t you','Who did you','How long did you']}],
+ sheet:'s4',
+ talk:['Interview each other about last weekend. Ask at least five questions. Start them with where, what, who, why and how long.'],
+ teacher:'<p><b>9 minutes.</b> Dialogue 2, machine 2, exercises 3, interview 2.</p><ul><li>The one idea: the past lives in did. Everything else follows from it.</li><li>Listen for: “Did you went?” and “Where you went?”</li><li>Interview: she asks you five questions. Answer in full past sentences so she hears the answer pattern.</li><li>There are more exercises than one hour needs. Choose the ones that fit, and leave the rest as homework.</li></ul>'},
+
+{id:'ch5',n:'Chapter 5',title:'What I Thought',mins:9,focus:'Opinions and feelings',
+ tag:'Say what happened, then say what you thought. Linking words turn short sentences into real talk.',
+ tagro:'Spune ce s-a întâmplat, apoi ce ai gândit. Cuvintele de legătură transformă propozițiile scurte în vorbire reală.',
+ sky:['#2B2D5B','#C77B8E'],sun:['16%','44%','#FFC2A6'],
+ legend:[['ex','thought or feeling'],['link','linking word']],drop:false,
+ story:[
+  {en:'Dear Ana,',ro:'Dragă Ana,'},
+  {en:'I ((thought)) the weekend would be boring, @@but@@ I was wrong. At first I ((felt)) nervous @@because@@ I didn\'t know the mountain. It ((seemed)) too steep, @@so@@ I almost stayed at the hotel. @@Although@@ I was tired, I kept walking.',
+   ro:'Credeam că weekendul va fi plictisitor, dar m-am înșelat. La început m-am simțit nervoasă pentru că nu cunoșteam muntele. Părea prea abrupt, așa că aproape am rămas la hotel. Deși eram obosită, am continuat să merg.'},
+  {en:'I was ((surprised)) at how beautiful the view was, and I felt proud when we reached the top. @@In the end@@, I think I needed this trip more than I knew.',
+   ro:'Am fost surprinsă cât de frumoasă era priveliștea și m-am simțit mândră când am ajuns în vârf. Până la urmă, cred că aveam nevoie de această călătorie mai mult decât știam.'}],
+ howTitle:'Reason, result, contrast',
+ how:function(){
+  function lk(w,job,a,b,order){return '<div class="lk"><div class="sent">'+order(a,b,w)+'</div><small>'+job+'</small></div>';}
+  return '<div class="link-grid diagram">'+
+  '<div class="lk"><div class="sent"><span class="a">I stayed in</span><span class="l">because</span><span class="b">it was cold.</span></div><small>because points to the reason</small></div>'+
+  '<div class="lk"><div class="sent"><span class="b">It was cold,</span><span class="l">so</span><span class="a">I stayed in.</span></div><small>so points to the result</small></div>'+
+  '<div class="lk"><div class="sent"><span class="b">It was cold,</span><span class="l">but</span><span class="a">I went out.</span></div><small>but shows a surprise or a contrast</small></div>'+
+  '<div class="lk"><div class="sent"><span class="l">Although</span><span class="b">it was cold,</span><span class="a">I went out.</span></div><small>although says the same, at the start</small></div>'+
+  '<div class="lk"><div class="sent"><span class="b">We were lost.</span><span class="l">In the end,</span><span class="a">we found the road.</span></div><small>in the end gives the final result</small></div></div>'+
+  '<p class="ro">Because dă motivul, so dă rezultatul. But și although arată un contrast. In the end înseamnă „până la urmă”.</p>';},
+ ex:[
+  {t:'choice',id:'a',title:'Choose the best linking word',intro:'Pick the word that makes the sentence work.',items:[
+   {q:'I was tired, ___ I went to bed early.',o:['because','so','but'],a:1,why:'Tired is the reason, going to bed is the result: so.'},
+   {q:'I went to bed early ___ I was tired.',o:['so','but','because'],a:2,why:'Because gives the reason.'},
+   {q:'The hotel was cheap, ___ the room was clean.',o:['but','because','so'],a:0,why:'Cheap hotels are often not clean, so this is a contrast: but.'},
+   {q:'___ it rained, we walked to the market.',o:['Because','Although','So'],a:1,why:'Although shows we did it anyway.'},
+   {q:'We were lost. ___, we found the road.',o:['Because','So','In the end'],a:2,why:'In the end gives the final result.'}]},
+  {t:'open',id:'b',title:'Finish it in your own words',intro:'Write your own ending. Press Hear it to listen to your sentence. Then say it again from memory.',items:[
+   'I felt nervous because','I thought it would be easy, but','It was very cold, so','Although I was tired,','In the end, I felt']},
+  {t:'build',id:'c',title:'Build the sentence',intro:'Tap the words in order. Tap a word in the sentence to take it back.',items:[
+   ['Although','it','rained,','we','walked','to','the','market.'],['I','stayed','at','home','because','I','felt','ill.'],['It','was','cold,','so','I','stayed','in.'],['At','first','I','felt','nervous,','but','in','the','end','I','felt','proud.']]},
+  {t:'choice',id:'d',title:'How did you feel?',intro:'Pick the feeling that fits the story.',items:[
+   {q:'You lost your keys, then found them in your coat.',o:['bored','relieved','disappointed'],a:1,why:'Relieved = happy that a problem is over.'},
+   {q:'You studied hard and passed the test.',o:['proud','embarrassed','nervous'],a:0,why:'Proud = happy about something you did.'},
+   {q:'Your friend did not come to your party.',o:['delighted','disappointed','curious'],a:1,why:'Disappointed = sad because you expected something else.'},
+   {q:'You opened a gift and it was a complete surprise.',o:['bored','embarrassed','surprised'],a:2,why:'Surprised = you did not expect it.'}]}],
+ sheet:'s5',
+ talk:['Tell me about a decision that surprised you. What did you think before, and what did you think after?','What did you think about your first day in a new place?'],
+ teacher:'<p><b>9 minutes.</b> Letter 2, linking words 1, exercises 4, talk 2.</p><ul><li>This chapter is for listening. Do not interrupt her opinions to correct grammar. Write down two or three mistakes and come back to them at the end.</li><li>Ask “why?” often. It pulls out because. Ask “and then?” to pull out so and then.</li><li>The writing exercise is private to this page. Ask her to read one sentence aloud.</li><li>There are more exercises than one hour needs. Choose the ones that fit, and leave the rest as homework.</li></ul>'},
+
+{id:'ch6',n:'Chapter 6',title:'Curtain Call',mins:15,focus:'The final conversation',
+ tag:'The last fifteen minutes are for talking. You already have the verbs, the phrases, the questions and the linking words.',
+ tagro:'Ultimele cincisprezece minute sunt pentru conversație. Ai deja verbele, expresiile, întrebările și cuvintele de legătură.',
+ sky:['#070B1A','#1B2A4A'],sun:['74%','20%','#E8EEF7'],night:true,
+ legend:[['v','regular verb'],['v irr','irregular verb'],['ex','phrase'],['link','linking word']],drop:true,
+ story:[
+  {en:'Listen to a model story first. Last weekend I {{went}} to the mountains with an old friend. At first I {{was}} nervous @@because@@ the hike [[looked]] very hard, @@so@@ I almost ((gave up)). Then I ((made up my mind)) to try. We ((set off)) at nine and, all of a sudden, it [[started]] to snow! I {{forgot}} my gloves, @@but@@ a woman {{gave}} me wool socks for my hands. @@In the end@@ it ((turned out)) to be the best day of the trip, and I ((couldn\'t help)) smiling.',
+   ro:'Ascultă mai întâi o poveste model. Weekendul trecut am mers la munte cu o veche prietenă. La început am fost nervoasă pentru că drumeția părea foarte grea, așa că aproape am renunțat. Apoi m-am hotărât să încerc. Am pornit la nouă și, deodată, a început să ningă! Mi-am uitat mănușile, dar o femeie mi-a dat șosete de lână pentru mâini. Până la urmă, s-a dovedit a fi cea mai frumoasă zi din călătorie și nu m-am putut abține să zâmbesc.'}],
+ howTitle:'The shape of a story',
+ how:function(){
+  return '<svg class="arc diagram" viewBox="0 0 640 220" role="img" aria-label="A story rises from the setting to the action, then settles into the ending and the feeling"><line class="gnd" x1="20" y1="195" x2="620" y2="195"/>'+
+  '<path class="curve" d="M40 170 C140 170 160 120 240 100 C330 78 360 40 420 40 C500 40 520 120 600 130"/>'+
+  [[40,170],[170,128],[310,66],[470,70],[600,130]].map(function(p,i){return '<circle class="dot" cx="'+p[0]+'" cy="'+p[1]+'" r="22"/><text class="num" x="'+p[0]+'" y="'+(p[1]+8)+'">'+(i+1)+'</text>';}).join('')+'</svg>'+
+  '<ol class="beats">'+
+  '<li><div><b>Where and when</b>Last summer, in Brașov…<span class="ro">Unde și când</span></div></li>'+
+  '<li><div><b>The problem</b>But… · The trouble was…<span class="ro">Problema</span></div></li>'+
+  '<li><div><b>What happened</b>Then… · All of a sudden… (past verbs)<span class="ro">Ce s-a întâmplat</span></div></li>'+
+  '<li><div><b>The ending</b>In the end… · It turned out…<span class="ro">Finalul</span></div></li>'+
+  '<li><div><b>What I thought or felt</b>I felt… · It was worth it.<span class="ro">Ce am gândit sau simțit</span></div></li></ol>';},
+ ex:[],stage:true,
+ sheet:'s6',
+ talk:[],
+ teacher:'<p><b>15 minutes. Start the timer on the page.</b></p><ul><li>0 to 1: she draws a card and thinks for a moment. No writing.</li><li>1 to 5: she tells the story. Do not interrupt. Note three mistakes at most.</li><li>5 to 8: you ask follow-up questions with did (Where did you go? What did you say?).</li><li>8 to 12: swap. You tell a short story and she asks you questions.</li><li>12 to 15: recap. Say three good sentences she produced. Correct three mistakes and have her repeat each corrected sentence aloud. Tick the checklist together.</li></ul>'}
+];
+var PROMPTS=[
+['A trip that did not go as planned','O călătorie care nu a mers conform planului'],['The best meal you ever had','Cea mai bună masă pe care ai mâncat-o'],['A time you got lost','O dată când te-ai rătăcit'],
+['Your first day in a new place','Prima ta zi într-un loc nou'],['Something you lost and then found','Ceva ce ai pierdut și apoi ai găsit'],['A day from your childhood','O zi din copilărie'],
+['A big surprise','O mare surpriză'],['A mistake that turned out well','O greșeală care s-a dovedit bine'],['Someone you ran into by chance','Cineva pe care l-ai întâlnit întâmplător'],
+['A decision that took a long time','O decizie care a luat mult timp'],['A book or film you couldn\'t put down','O carte sau un film de care nu te-ai putut desprinde'],['A time you gave up, then tried again','O dată când ai renunțat, apoi ai încercat din nou'],
+['A day when everything went wrong','O zi în care totul a mers prost'],['Your best day this year','Cea mai bună zi din acest an']];
+var CHECK=['3 regular verbs (walked, asked…)','3 irregular verbs (went, saw…)','1 phrase (ran into, turned out…)','1 question with did','1 linking word (because, so, but…)','1 feeling or opinion (I felt… I thought…)'];
+
+/* ---------- Progress ---------- */
+function exId(ch,ex,i){return ch.id+'-'+ex.id+'-'+i;}
+function total(ch){var n=0;ch.ex.forEach(function(e){if(e.t!=='flip')n+=e.items.length;});return n;}
+function doneCount(ch){var n=0;ch.ex.forEach(function(e){if(e.t==='flip')return;e.items.forEach(function(_,i){if(S.done[exId(ch,e,i)])n++;});});return n;}
+function markDone(id){S.done[id]=1;save();refreshStrip();var c=$('#cnt');if(c){var ch=CH.filter(function(x){return x.id===cur;})[0];if(ch)c.textContent=doneCount(ch)+' of '+total(ch)+' done';}}
+
+/* ---------- Renderers ---------- */
+function titleCard(o){
+  return '<header class="titlecard" style="--sky-a:'+o.sky[0]+';--sky-b:'+o.sky[1]+';--sx:'+o.sun[0]+';--sy:'+o.sun[1]+';--sunc:'+o.sun[2]+'">'+
+  '<div class="sky"></div>'+(o.night?'<div class="stars"></div>':'')+'<div class="sun"></div>'+
+  '<svg class="mtn" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true"><path class="m1" d="M0 200V110L140 60 260 120 380 50 520 130 660 70 800 140 940 60 1080 120 1200 80V200Z"/><path class="m2" d="M0 200V150L180 100 320 155 470 110 640 165 820 115 1000 160 1200 120V200Z"/></svg>'+
+  '<div class="shade"></div><div class="bar t"></div><div class="bar b"></div>'+
+  '<div class="wrap tc-in"><p class="kicker">'+o.kicker+'</p><h1>'+o.title+'</h1><p class="tag">'+o.tag+'</p><p class="tag ro">'+o.tagro+'</p><div class="chips">'+o.chips.map(function(c){return '<span class="chip-i">'+c+'</span>';}).join('')+'</div></div></header>';
+}
+function rFill(ch,ex){
+  return '<div class="exb"><h3>'+ex.title+'</h3><p class="intro">'+ex.intro+'</p>'+ex.items.map(function(it,i){
+    var id=exId(ch,ex,i),d=S.done[id];
+    return '<div class="row'+(d?' good':'')+'" data-k="fill" data-id="'+id+'" data-ans="'+esc(it.ans.join('|'))+'" data-hint="'+esc(it.hint||'')+'"><span>'+it.pre+'</span><input id="in-'+id+'" class="gap" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Answer '+(i+1)+'"'+(d?' value="'+esc(it.ans[0])+'" disabled':'')+'><span class="base">('+it.base+')</span><span>'+it.post+'</span><span class="fb" aria-live="polite">'+(d?'Correct':'')+'</span></div>';
+  }).join('')+'</div>';
+}
+function rSort(ch,ex){
+  return '<div class="exb"><h3>'+ex.title+'</h3><p class="intro">'+ex.intro+'</p>'+ex.items.map(function(it,i){
+    var id=exId(ch,ex,i),d=S.done[id];
+    return '<div class="row sortrow'+(d?' good':'')+'" data-k="sort" data-id="'+id+'" data-a="'+it[1]+'"><span class="w">'+it[0]+'</span>'+
+    (ex.id==='b'&&ch.id==='ch1'?sayBtn(it[0],'Listen'):'')+
+    '<span class="bk">'+ex.buckets.map(function(b,bi){return '<button type="button" class="bkt'+(d&&bi===it[1]?' right':'')+'" data-b="'+bi+'"'+(d?' disabled':'')+'>'+b+'</button>';}).join('')+'</span><span class="fb" aria-live="polite">'+(d?'Correct':'')+'</span></div>';
+  }).join('')+'</div>';
+}
+function rChoice(ch,ex){
+  return '<div class="exb"><h3>'+ex.title+'</h3><p class="intro">'+ex.intro+'</p>'+ex.items.map(function(it,i){
+    var id=exId(ch,ex,i),d=S.done[id];
+    return '<div class="q'+(d?' good':'')+'" data-k="choice" data-id="'+id+'" data-a="'+it.a+'" data-why="'+esc(it.why)+'"><p class="qt">'+it.q+'</p><div class="opts">'+it.o.map(function(o,oi){return '<button type="button" class="opt'+(d&&oi===it.a?' right':'')+'" data-i="'+oi+'"'+(d?' disabled':'')+'>'+o+'</button>';}).join('')+'</div><p class="fb" aria-live="polite">'+(d?'Correct. '+it.why:'')+'</p></div>';
+  }).join('')+'</div>';
+}
+function rSelect(ch,ex){
+  return '<div class="exb"><h3>'+ex.title+'</h3><p class="intro">'+ex.intro+'</p>'+ex.items.map(function(it,i){
+    var id=exId(ch,ex,i),d=S.done[id];
+    return '<div class="row'+(d?' good':'')+'" data-k="select" data-id="'+id+'" data-a="'+esc(it.a)+'"><span>'+it.pre+'</span><select id="sel-'+id+'" class="sel" aria-label="Phrase '+(i+1)+'"'+(d?' disabled':'')+'><option value="">choose…</option>'+ex.bank.map(function(b){return '<option'+(d&&b===it.a?' selected':'')+'>'+b+'</option>';}).join('')+'</select><span>'+it.post+'</span><span class="fb" aria-live="polite">'+(d?'Correct':'')+'</span></div>';
+  }).join('')+'</div>';
+}
+function rBuild(ch,ex){
+  return '<div class="exb"><h3>'+ex.title+'</h3><p class="intro">'+ex.intro+'</p>'+ex.items.map(function(w,i){
+    var id=exId(ch,ex,i),d=S.done[id],ans=w.join(' ').replace(/ \?/g,'?');
+    var sh=shuf(w,i+3);if(sh.join(' ')===w.join(' '))sh.reverse();
+    return '<div class="bld'+(d?' good':'')+'" data-k="build" data-id="'+id+'" data-a="'+esc(ans)+'"><div class="line" aria-label="Your sentence">'+(d?w.map(function(x){return '<span class="chipw">'+x+'</span>';}).join(''):'')+'</div>'+
+    '<div class="pool">'+(d?'':sh.map(function(x){return '<button type="button" class="chipw">'+x+'</button>';}).join(''))+'</div>'+
+    '<div class="bar2">'+(d?'':'<button type="button" class="btn primary" data-act="chk">Check</button><button type="button" class="btn" data-act="clr">Clear</button>')+'<span class="fb" aria-live="polite">'+(d?'Correct':'')+'</span></div></div>';
+  }).join('')+'</div>';
+}
+function rFlip(ch,ex){
+  return '<div class="exb"><h3>'+ex.title+'</h3><p class="intro">'+ex.intro+'</p><div class="flips">'+ex.items.map(function(it){return '<button type="button" class="flipc" aria-pressed="false" data-say="'+esc(it[1])+'"><span class="f">'+it[0]+'<small>tap to flip</small></span><span class="b">'+it[1]+'</span></button>';}).join('')+'</div></div>';
+}
+function rOpen(ch,ex){
+  return '<div class="exb"><h3>'+ex.title+'</h3><p class="intro">'+ex.intro+'</p>'+ex.items.map(function(s,i){
+    var id=exId(ch,ex,i),d=S.done[id];
+    return '<div class="row'+(d?' good':'')+'" data-k="open" data-id="'+id+'"><label for="op-'+id+'">'+s+'</label><input id="op-'+id+'" class="long" type="text" autocomplete="off" aria-label="'+esc(s)+'"><button type="button" class="btn" data-act="hear">Hear it</button><span class="fb">'+(d?'Done':'')+'</span></div>';
+  }).join('')+'</div>';
+}
+function rEx(ch,ex){return ({fill:rFill,sort:rSort,choice:rChoice,select:rSelect,build:rBuild,flip:rFlip,open:rOpen})[ex.t](ch,ex);}
+
+function stageTool(){
+  return '<div class="talkbox"><h3 style="font-size:1.25rem;margin-bottom:.4rem">Draw a story card</h3><p>Pick a card, think for a moment, then tell the story.</p>'+
+  '<div class="promptcard" id="pc" aria-live="polite"><h3>Press the button to draw a card.</h3></div><button type="button" class="btn primary" id="draw">Draw a card</button></div>'+
+  '<div class="talkbox" style="margin-top:14px"><h3 style="font-size:1.25rem;margin-bottom:.6rem">Did I use…?</h3>'+CHECK.map(function(c,i){return '<label class="chk" for="ck'+i+'"><input type="checkbox" id="ck'+i+'" data-ck="'+i+'"'+(S.chk[i]?' checked':'')+'><span>'+c+'</span></label>';}).join('')+'</div>'+
+  '<div class="talkbox teacher" style="margin-top:14px"><h3 style="font-size:1.25rem;margin-bottom:.4rem">Timer</h3><p class="timer" id="tmr">15:00</p><button type="button" class="btn primary" id="tgo">Start</button> <button type="button" class="btn" id="trs">Reset</button></div>';
+}
+
+function frameLinks(){
+  var items=[['cover','Cover','Cover']].concat(CH.map(function(c,i){return [c.id,String(i+1),c.title];})).concat([['sheets','Sheets','Cheat sheets']]);
+  $('#frames').innerHTML=items.map(function(it){
+    var isN=/^\d$/.test(it[1]);
+    return '<a class="frame" href="#'+it[0]+'" data-f="'+it[0]+'" title="'+esc(it[2])+'">'+(isN?'<b>'+it[1]+'</b><span class="fn">'+esc(it[2])+'</span>':'<span>'+it[1]+'</span>')+'</a>';
+  }).join('');
+}
+function refreshStrip(){
+  $$('.frame').forEach(function(f){
+    var id=f.getAttribute('data-f');
+    f.removeAttribute('aria-current');if(id===cur)f.setAttribute('aria-current','page');
+    var ch=CH.filter(function(c){return c.id===id;})[0];
+    f.classList.toggle('done',!!(ch&&total(ch)>0&&doneCount(ch)===total(ch)));
+  });
+}
+
+function renderCover(){
+  var tot=CH.reduce(function(a,c){return a+c.mins;},0);
+  return titleCard({kicker:'English lesson 5',title:'The Long Weekend',tag:'Talk about the past the way people really do: in stories, with real phrases, questions and opinions.',tagro:'Vorbește despre trecut așa cum o fac oamenii în realitate: prin povești, cu expresii reale, întrebări și opinii.',sky:['#1B2A44','#D9A877'],sun:['72%','46%','#FFE2B0'],chips:['6 chapters',tot+' minutes','Past tense']})+
+  '<div class="wrap body"><div class="part"><h2>The hour</h2><p>Chapters 1 to 5 are for doing: exercises, saying things aloud, short questions. Chapter 6 is the last fifteen minutes, and it is all talking. Chapters 1 to 5 each have three or four different kinds of exercise. Pick what fits the time and leave the rest as homework.</p>'+
+  '<div class="bar-time" aria-hidden="true">'+CH.map(function(c){return '<i style="flex:'+c.mins+'"></i>';}).join('')+'</div>'+
+  '<p class="ro">Capitolele 1–5 sunt pentru exerciții și vorbit. Capitolul 6 sunt ultimele cincisprezece minute, doar conversație.</p></div>'+
+  '<div class="part"><h2>Chapters</h2><ul class="prog">'+CH.map(function(c,i){var t=total(c);return '<li><a href="#'+c.id+'"><span class="n">'+(i+1)+'</span><span><b>'+c.title+'</b><small>'+c.focus+'</small></span><span class="m">'+c.mins+' min'+(t?'<br>'+doneCount(c)+' of '+t:'')+'</span></a></li>';}).join('')+
+  '<li><a href="#sheets"><span class="n">+</span><span><b>Cheat sheets</b><small>All six on one page</small></span><span class="m">keep</span></a></li></ul></div>'+
+  '<div class="part"><h2>How to use this page</h2><ul class="talk"><li>Press <b>Listen</b> to hear English read aloud, then say it back.</li><li><b>RO</b> shows or hides the Romanian help.</li><li><b>Notes</b> shows the teacher notes and the timer.</li></ul></div>'+
+  '<div class="chnav"><span></span><a class="nx" href="#ch1"><small>Begin</small><b>Chapter 1: '+CH[0].title+'</b></a></div></div>';
+}
+function renderSheets(){
+  return titleCard({kicker:'Keep these',title:'Cheat sheets',tag:'One page for each chapter. Use them while you talk.',tagro:'O pagină pentru fiecare capitol. Folosește-le în timp ce vorbești.',sky:['#2E4A62','#B8D4D0'],sun:['62%','30%','#FFFBE0'],chips:['6 sheets']})+
+  '<div class="wrap body">'+CH.map(function(c,i){return '<div class="part"><h2>Chapter '+(i+1)+': '+c.title+'</h2>'+sheet(c.sheet)+'</div>';}).join('')+'</div>';
+}
+function renderChapter(i){
+  var ch=CH[i],prev=CH[i-1],next=CH[i+1];
+  var h=titleCard({kicker:ch.n,title:ch.title,tag:ch.tag,tagro:ch.tagro,sky:ch.sky,sun:ch.sun,night:ch.night,chips:[ch.mins+' min',ch.focus]});
+  h+='<div class="wrap body">';
+  h+='<section class="part"><h2>The scene</h2><div class="legend">'+ch.legend.map(function(l){return '<span class="'+l[0]+'">'+l[1]+'</span>';}).join('')+'</div><div class="story'+(ch.drop?' drop':'')+'">'+
+    ch.story.map(function(p){return '<div class="para"><p class="en">'+fmt(p.en)+'</p><p class="ro">'+p.ro+'</p>'+sayBtn(plain(p.en),'Listen')+'</div>';}).join('')+'</div></section>';
+  h+='<section class="part"><h2>'+ch.howTitle+'</h2>'+ch.how()+'</section>';
+  if(ch.stage){h+='<section class="part"><h2>Your story</h2>'+stageTool()+'</section>';}
+  else{h+='<section class="part"><h2>Practice <span class="count" id="cnt">'+doneCount(ch)+' of '+total(ch)+' done</span></h2>'+ch.ex.map(function(e){return rEx(ch,e);}).join('')+'</section>';}
+  h+='<section class="part"><h2>Cheat sheet</h2>'+sheet(ch.sheet)+'</section>';
+  if(ch.talk.length){h+='<section class="part"><h2>Talk about it</h2><div class="talkbox"><ul class="talk">'+ch.talk.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul></div></section>';}
+  h+='<aside class="notes teacher"><h3>Teacher notes</h3>'+ch.teacher+'</aside>';
+  h+='<nav class="chnav" aria-label="Chapter navigation">'+(prev?'<a href="#'+prev.id+'"><small>Previous</small><b>'+prev.title+'</b></a>':'<a href="#cover"><small>Back to</small><b>The cover</b></a>')+
+    (next?'<a class="nx" href="#'+next.id+'"><small>Next</small><b>'+next.title+'</b></a>':'<a class="nx" href="#sheets"><small>Finally</small><b>All cheat sheets</b></a>')+'</nav></div>';
+  return h;
+}
+
+/* ---------- Routing ---------- */
+var cur='cover',tmr=null;
+function stopTimer(){if(tmr){clearInterval(tmr);tmr=null;}}
+function route(){
+  stopTimer();
+  var h=(location.hash||'').replace('#','');
+  var idx=CH.map(function(c){return c.id;}).indexOf(h);
+  cur=(idx>-1)?h:(h==='sheets'?'sheets':'cover');
+  $('#stage').innerHTML=(cur==='cover')?renderCover():(cur==='sheets'?renderSheets():renderChapter(idx));
+  refreshStrip();
+  window.scrollTo(0,0);
+  var f=$('.frame[data-f="'+cur+'"]');if(f&&f.scrollIntoView){try{f.scrollIntoView({block:'nearest',inline:'center'});}catch(e){}}
+}
+
+/* ---------- Interaction ---------- */
+function checkFill(inp){
+  var row=inp.closest('.row'),val=inp.value.trim().toLowerCase();if(!val||row.dataset.last===val)return;row.dataset.last=val;
+  var ans=row.dataset.ans.split('|'),fb=$('.fb',row);
+  if(ans.indexOf(val)>-1){row.classList.remove('bad');row.classList.add('good');inp.disabled=true;fb.textContent='Correct';markDone(row.dataset.id);}
+  else{var t=(+row.dataset.tries||0)+1;row.dataset.tries=t;row.classList.add('bad');fb.textContent=t>=2?('Answer: '+ans[0]):('Not yet. '+row.dataset.hint);}
+}
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('gap'))checkFill(e.target);});
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.classList.contains('gap'))checkFill(t);
+  else if(t.classList.contains('sel')){
+    var row=t.closest('.row'),fb=$('.fb',row);if(!t.value)return;
+    if(t.value===row.dataset.a){row.classList.remove('bad');row.classList.add('good');t.disabled=true;fb.textContent='Correct';markDone(row.dataset.id);}
+    else{row.classList.add('bad');fb.textContent='Not quite. Try another phrase.';}
+  }else if(t.dataset&&t.dataset.ck!==undefined){S.chk[+t.dataset.ck]=t.checked;save();}
+});
+document.addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t)return;
+  if(t.classList.contains('say')){say(t.dataset.say);return;}
+  if(t.classList.contains('flipc')){var on=t.classList.toggle('flipped');t.setAttribute('aria-pressed',on);if(on)say(t.dataset.say);return;}
+  if(t.classList.contains('bkt')){
+    var row=t.closest('.row'),fb=$('.fb',row);
+    if(t.dataset.b===row.dataset.a){t.classList.add('right');row.classList.remove('bad');row.classList.add('good');$$('.bkt',row).forEach(function(b){b.disabled=true;});fb.textContent='Correct';markDone(row.dataset.id);}
+    else{t.classList.add('wrong');t.disabled=true;row.classList.add('bad');fb.textContent='Try another one.';}
+    return;
+  }
+  if(t.classList.contains('opt')){
+    var q=t.closest('.q'),fb2=$('.fb',q);
+    if(t.dataset.i===q.dataset.a){t.classList.add('right');q.classList.remove('bad');q.classList.add('good');$$('.opt',q).forEach(function(b){b.disabled=true;});fb2.textContent='Correct. '+q.dataset.why;markDone(q.dataset.id);}
+    else{t.classList.add('wrong');t.disabled=true;q.classList.add('bad');fb2.textContent='Not quite. Try again.';}
+    return;
+  }
+  if(t.classList.contains('chipw')){
+    var bld=t.closest('.bld');if(!bld||bld.classList.contains('good'))return;
+    var line=$('.line',bld),pool=$('.pool',bld);
+    if(t.parentNode===pool)line.appendChild(t);else pool.appendChild(t);
+    return;
+  }
+  if(t.dataset.act==='chk'){
+    var b=t.closest('.bld'),words=$$('.line .chipw',b).map(function(x){return x.textContent;}).join(' ').replace(/ \?/g,'?'),fb3=$('.fb',b);
+    if(words===b.dataset.a){b.classList.remove('bad');b.classList.add('good');$$('.chipw',b).forEach(function(c){c.disabled=true;});$('.bar2',b).querySelectorAll('.btn').forEach(function(x){x.remove();});fb3.textContent='Correct';markDone(b.dataset.id);say(b.dataset.a);}
+    else{b.classList.add('bad');fb3.textContent='Not yet. Read it aloud and listen to it.';}
+    return;
+  }
+  if(t.dataset.act==='clr'){var b2=t.closest('.bld');$$('.line .chipw',b2).forEach(function(c){$('.pool',b2).appendChild(c);});$('.fb',b2).textContent='';b2.classList.remove('bad');return;}
+  if(t.dataset.act==='hear'){
+    var r=t.closest('.row'),inp=$('.long',r),txt=inp.value.trim();if(!txt)return;
+    say($('label',r).textContent+' '+txt);
+    if(txt.split(/\s+/).length>=3){r.classList.add('good');$('.fb',r).textContent='Done';markDone(r.dataset.id);}
+    return;
+  }
+  if(t.id==='draw'){
+    var pr=PROMPTS[Math.floor(Math.random()*PROMPTS.length)],pc=$('#pc');
+    if(pc&&pc.dataset.last===pr[0]){pr=PROMPTS[(PROMPTS.indexOf(pr)+1)%PROMPTS.length];}
+    pc.dataset.last=pr[0];pc.innerHTML='<h3>'+pr[0]+'</h3><p class="ro">'+pr[1]+'</p>';return;
+  }
+  if(t.id==='tgo'){
+    if(tmr){stopTimer();t.textContent='Start';return;}
+    var el=$('#tmr'),left=(function(){var m=el.textContent.split(':');return (+m[0])*60+(+m[1]);})();
+    t.textContent='Pause';
+    tmr=setInterval(function(){left=Math.max(0,left-1);el.textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');if(left===0){stopTimer();t.textContent='Start';}},1000);return;
+  }
+  if(t.id==='trs'){stopTimer();$('#tmr').textContent='15:00';$('#tgo').textContent='Start';return;}
+});
+function applyToggles(){
+  document.body.classList.toggle('ro-on',S.ro);document.body.classList.toggle('teacher-on',S.teacher);
+  $('#tro').setAttribute('aria-pressed',S.ro);$('#tte').setAttribute('aria-pressed',S.teacher);
+}
+$('#tro').addEventListener('click',function(){S.ro=!S.ro;save();applyToggles();});
+$('#tte').addEventListener('click',function(){S.teacher=!S.teacher;save();applyToggles();});
+$('#reset').addEventListener('click',function(){S.done={};S.chk=[];save();route();});
+window.addEventListener('hashchange',route);
+frameLinks();applyToggles();route();
+})();
+</script>
+
+</body></html>
